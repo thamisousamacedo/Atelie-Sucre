@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Faça seu Pedido - Atelier Sucré</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <header>
+      <div class="container">
+        <div class="logo">
+          <a href="index.html"><img src="logo2.png" alt="Atelier Sucré" /></a>
+        </div>
+        <nav>
+          <ul>
+            <li><a href="index.html">Início</a></li>
+            <li><a href="#menu">Menu</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main class="pedido-page">
+      <div class="container">
+        <h1>Faça seu Pedido</h1>
+        <p>Selecione os itens desejados e clique em "Enviar Pedido".</p>
+
+        <form id="pedido-form">
+          <div class="pedido-item">
+            <label for="macaron-framboesa">Macaron de Framboesa:</label>
+            <input
+              type="number"
+              id="macaron-framboesa"
+              name="macaron-framboesa"
+              value="0"
+              min="0"
+            />
+          </div>
+          <div class="pedido-item">
+            <label for="macaron-limao">Macaron de Limão:</label>
+            <input
+              type="number"
+              id="macaron-limao"
+              name="macaron-limao"
+              value="0"
+              min="0"
+            />
+          </div>
+          <div class="pedido-item">
+            <label for="macaron-chocolate">Macaron de Chocolate:</label>
+            <input
+              type="number"
+              id="macaron-chocolate"
+              name="macaron-chocolate"
+              value="0"
+              min="0"
+            />
+          </div>
+          <div class="pedido-item">
+            <label for="le-mille-feuille">Le Mille-Feuille:</label>
+            <input
+              type="number"
+              id="le-mille-feuille"
+              name="le-mille-feuille"
+              value="0"
+              min="0"
+            />
+          </div>
+          <div class="pedido-item">
+            <label for="le-paris-brest">Le Paris-Brest:</label>
+            <input
+              type="number"
+              id="le-paris-brest"
+              name="le-paris-brest"
+              value="0"
+              min="0"
+            />
+          </div>
+          <div class="pedido-item">
+            <label for="leclair">L'eclair:</label>
+            <input
+              type="number"
+              id="leclair"
+              name="leclair"
+              value="0"
+              min="0"
+            />
+          </div>
+          <div class="enviar-pedido">
+            <button type="button" class="button primary" onclick="enviarPedido">
+              Enviar Pedido
+            </button>
+          </div>
+        </form>
+      </div>
+    </main>
+
+    <footer>
+      <div class="container">
+        <p>&copy; 2023 Atelier Sucré. Todos os direitos reservados.</p>
+      </div>
+    </footer>
+
+    <script>
+      function enviarPedido() {
+        const telefone = LocalStorage.getItem("telefone");
+        if (!telefone) {
+          alert("Você precisa se cadastrar antes de fazer um pedido.");
+          window.location.href = "cadastro.html";
+          return;
+        }
+
+        const pedidoItens = {
+          "marcaron-framboesa": parseInt(
+            document.getElementById("macaron-famboesa").value
+          ),
+          "macaron-limao": parseInt(
+            document.getElementById("macaron-limao").value
+          ),
+          "macaron-chocolate": parseInt(
+            document.getElementById("macaron-chocolate").value
+          ),
+          "le-mille-feuille": parseInt(
+            document.getElementById("le-mille-feuille").value
+          ),
+          "le-paris-brest": parseInt(
+            document.getElementById("le-paris-brest").value
+          ),
+          leclair: parseInt(document.getElementById("leclair").value),
+        };
+
+        const formData = new FormData();
+        formData.append("telefone", telefone);
+        formData.append("pedido_itens", JSON.stringify(pedidoItens));
+
+        fetch("backend/pedido.php", {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              window.open(data.whatsapp_link, "_blank");
+            } else {
+              alert(data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("Erro ao enviar pedido:", error);
+            alert("Ocorreu um erro ao tentar enviar o pedido.");
+          });
+      }
+    </script>
+  </body>
+</html>

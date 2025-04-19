@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cadastro</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <div class="logo">
+          <img src="logo2.png" alt="Logo Atelier Sucré" />
+        </div>
+        <nav>
+          <ul>
+            <li><a href="index.html">Início</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <main class="cadastro-page">
+      <div class="container">
+        <h1>Cadastre-se</h1>
+        <form id="cadastro-form" action="cadastro.php" method="post">
+          <div class="form-group">
+            <label for="nome">Nome Completo:</label>
+            <input type="text" id="nome" name="nome" required />
+          </div>
+          <div class="form-group">
+            <label for="telefone">Telefone:</label>
+            <input type="tel" id="telefone" name="telefone" required />
+          </div>
+          <div class="form-group">
+            <label for="endereco">Endereço:</label>
+            <input type="text" id="endereco" name="endereco" required />
+          </div>
+          <div class="form-group">
+            <label for="email">E-mail:</label>
+            <input type="email" id="email" name="email" required />
+          </div>
+          <div class="form-group">
+            <label for="senha">Senha:</label>
+            <input type="password" id="senha" name="senha" required />
+          </div>
+          <div class="form-group">
+            <label for="confirmar-senha">Confirmar Senha:</label>
+            <input
+              type="password"
+              id="confirmar-senha"
+              name="confirmar-senha"
+              required
+            />
+          </div>
+          <button type="submit" class="button primary">Cadastrar</button>
+        </form>
+        <p class="Login-link">Já tem uma conta? <a href="#">Faça login</a></p>
+      </div>
+    </main>
+    <footer>
+      <div class="container">
+        <p>&copy; 2023 Atelier Sucré. Todos os direitos reservados.</p>
+      </div>
+    </footer>
+    <script>
+      document
+        .getElementById("cadastro-form")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+          const formData = new FormData(this);
+
+          fetch("cadastro.php", {
+            method: "POST",
+            body: formData,
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.sucess) {
+                alert(data.message);
+                localStorage.setItem("telefone", formData.get("teledone"));
+                window.location.href = "pedido.html";
+              } else {
+                alert(data.message);
+              }
+            })
+            .catch((error) => {
+              console.error("Erro ao enviar cadastro:", error);
+              alert("Ocorreu um erro ao tentar cadastrar.");
+            });
+        });
+    </script>
+  </body>
+</html>
